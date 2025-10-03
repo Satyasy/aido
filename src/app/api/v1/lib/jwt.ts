@@ -8,7 +8,7 @@ if (!SECRET) {
 }
 export function signJwt(
     payload: object,
-    expiresIn: SignOptions['expiresIn'] = process.env.JWT_EXPIRATION as SignOptions['expiresIn']
+    expiresIn: SignOptions['expiresIn'] = "1d" as SignOptions['expiresIn']
 ): string {
     const options: SignOptions = { expiresIn };
     return jwt.sign(payload, SECRET, options);

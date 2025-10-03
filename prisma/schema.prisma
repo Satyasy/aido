@@ -23,10 +23,10 @@ model users {
   createdAt     DateTime @default(now())
   deletedAt     DateTime @default(now())
 
-  consultaions consultatations[]
+  consultations consultations[]
 }
 
-model consultatations {
+model consultations {
   id Int @id @default(autoincrement())
   userId Int
   symptoms String? @db.Text
@@ -35,7 +35,7 @@ model consultatations {
   createdAt DateTime @default(now())
 
   user users @relation(fields: [userId], references: [id])
-  consultaionSymptoms consultatationsSymptoms[]
+  consultationsSymptoms consultationsSymptoms[]
   medicineRecommendations medicineRecommendations[]
   aiLogs aiLogs[]
 }
@@ -46,15 +46,15 @@ model symptoms {
   description String? @db.Text
   category String? @db.VarChar(100)
 
-  consultaionSymptoms consultatationsSymptoms[]
+  consultationsSymptoms consultationsSymptoms[]
 }
 
-model consultatationsSymptoms {
+model consultationsSymptoms {
   consultationId Int
   symptomId Int
   notes String? @db.Text
 
-  consultation consultatations @relation(fields: [consultationId], references: [id])
+  consultation consultations @relation(fields: [consultationId], references: [id])
   symptom symptoms @relation(fields: [symptomId], references: [id])
 
   @@id([consultationId, symptomId])
@@ -79,18 +79,18 @@ model medicineRecommendations {
   reason String? @db.Text
   confidenceScore Float
 
-  consultation consultatations @relation(fields: [consultationId], references: [id])
+  consultation consultations @relation(fields: [consultationId], references: [id])
   medicine medicines @relation(fields: [medicineId], references: [id])
 }
 
 model aiLogs {
   id Int @id @default(autoincrement())
-  consultaionId Int
+  consultationId Int
   inputText String? @db.Text
   outputText String? @db.Text
   timestamp DateTime @default(now())
 
-  consultaion consultatations @relation(fields: [consultaionId], references: [id])
+  consultation consultations @relation(fields: [consultationId], references: [id])
 }
 
 

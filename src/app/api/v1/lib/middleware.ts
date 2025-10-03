@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyJwt } from "./lib/jwt";
+import { verifyJwt } from "./jwt";
 
 const PUBLIC_PATHS = ["/api/v1/auth/login", "/api/v1/auth/register"];
 
@@ -31,14 +31,43 @@ export function middleware(req: NextRequest) {
     );
   }
 
-  if (pathname.startsWith("api/v1/user") && decoded.role !== "user") {
+  if (pathname.startsWith("api/v1/patient") && decoded.role !== "patient") {
     return NextResponse.json(
-      { error: "Forbidden: Users only" },
+      { error: "Forbidden: Patients only" },
       { status: 403 }
     );
   }
 
   return NextResponse.next();
+}
+
+export function withAuth(handler: any, roles: string[] = []) {
+  return async (req: NextRequest, res: NextResponse) => {
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    const decoded = verifyJwt(token);
+    if (!decoded) {
+      return NextResponse.json(
+        { error: "Invalid token or expired token" },
+        { status: 401 }
+      );
+    }
+
+    if (roles.length && !roles.includes(decoded.role)) {
+      return NextResponse.json(
+        { error: "Forbidden: Insufficient permissions" },
+        { status: 403 }
+      );
+    }
+
+    (req as any).user = decoded;
+
+    return handler(req, res);
+  }
 }
 
 export const config = {

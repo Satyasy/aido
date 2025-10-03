@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write .",
+    "prisma": "dotenv -e .env prisma migrate dev",
+    "prisma:generate": "dotenv -e .env prisma generate",
+    "prisma:deploy": "dotenv -e .env prisma migrate deploy",
+    "prisma:push": "dotenv -e .env prisma db push",
+    "prisma:studio": "dotenv -e .env prisma studio"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.0",
@@ -72,6 +78,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.178.1",
+    "dotenv-cli": "^10.0.0",
     "prisma": "^6.13.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.6",

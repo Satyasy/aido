@@ -4,22 +4,22 @@ import { NextResponse } from "next/server";
 import { signJwt } from "../../lib/jwt";
 
 export async function POST(req: Request) {
-    const { username, password } = await req.json();
+    const { name, password } = await req.json();
 
-    const user = await prisma.user.findFirst({
-        where: { name: username }
+    const user = await prisma.users.findFirst({
+        where: { name: name }
     })
 
-    if (!user || !(await compare(password, user.password))) {
+    if (!user || !(await compare(password, user.passwordHash))) {
         return NextResponse.json(
-            { error: "Username and password are required" },
+            { error: "name and password are required" },
             { status: 400 }
         );
     }
 
     const token = signJwt({
         id: user.id,
-        username: user.name,
+        name: user.name,
         role: user.role,
     });
 
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             message: "User logged in successfully",
             user: {
                 id: user.id,
-                username: user.name,
+                name: user.name,
                 role: user.role,
             },
             type: "Bearer",

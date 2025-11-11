@@ -1,7 +1,7 @@
-export type UserRole = 'admin' | 'user';
+export type UserRole = 'admin' | 'patient';
 
 export interface jwtPayload {
   id: string;
-  username: string;
+  name: string;
   role: UserRole;
 }

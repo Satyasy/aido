@@ -14,12 +14,83 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          Int   @id @default(autoincrement())
-  name    String?   
-  email       String?   @unique
-  password    String
-  role        String @default("patient")
-  createdAt   DateTime @default(now())
-  deletedAt   DateTime @default(now())
+model users {
+  id            Int      @id @default(autoincrement())
+  name          String?  @db.VarChar(255)
+  email         String?  @unique @db.VarChar(255)
+  passwordHash String   @db.VarChar(255)
+  role          String   @default("patient") @db.VarChar(50)
+  createdAt     DateTime @default(now())
+  deletedAt     DateTime @default(now())
+
+  consultations consultations[]
 }
+
+model consultations {
+  id Int @id @default(autoincrement())
+  userId Int
+  symptoms String? @db.Text
+  diagnosisSummary String? @db.Text
+  severity String? @db.VarChar(50)
+  createdAt DateTime @default(now())
+
+  user users @relation(fields: [userId], references: [id])
+  consultationsSymptoms consultationsSymptoms[]
+  medicineRecommendations medicineRecommendations[]
+  aiLogs aiLogs[]
+}
+
+model symptoms {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  description String? @db.Text
+  category String? @db.VarChar(100)
+
+  consultationsSymptoms consultationsSymptoms[]
+}
+
+model consultationsSymptoms {
+  consultationId Int
+  symptomId Int
+  notes String? @db.Text
+
+  consultation consultations @relation(fields: [consultationId], references: [id])
+  symptom symptoms @relation(fields: [symptomId], references: [id])
+
+  @@id([consultationId, symptomId])
+}
+
+model medicines {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  imageUrl String? @db.VarChar(255)
+  description String? @db.Text
+  dosage String? @db.VarChar(100)
+  contraindications String? @db.Text
+  isPrescriptionRequired Boolean @default(true)
+
+  medicineRecommendations medicineRecommendations[]
+}
+
+model medicineRecommendations {
+  id Int @id @default(autoincrement())
+  consultationId Int
+  medicineId Int
+  reason String? @db.Text
+  confidenceScore Float
+
+  consultation consultations @relation(fields: [consultationId], references: [id])
+  medicine medicines @relation(fields: [medicineId], references: [id])
+}
+
+model aiLogs {
+  id Int @id @default(autoincrement())
+  consultationId Int
+  inputText String? @db.Text
+  outputText String? @db.Text
+  timestamp DateTime @default(now())
+
+  consultation consultations @relation(fields: [consultationId], references: [id])
+}
+
+

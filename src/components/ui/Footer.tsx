@@ -14,10 +14,10 @@ const helpItems = [
   { label: 'FAQ', href: '/faq' },
 ];
 
-const SocialIcon = ({ href, icon }: { href: string, icon: string }) => (
+const SocialIcon = ({ href, children }: { href: string, children: React.ReactNode }) => (
     <a href={href} target="_blank" rel="noopener noreferrer" 
-       className="w-8 h-8 flex items-center justify-center bg-white/30 rounded-full hover:bg-white/50 transition">
-        {icon}
+       className="w-8 h-8 flex items-center justify-center bg-white/30 rounded-full text-lg hover:bg-white/50 transition">
+        {children}
     </a>
 );
 
@@ -69,10 +69,10 @@ export function Footer() {
             <p className="text-sm mb-4">+3822 4567 8910</p>
             
             <div className="flex space-x-3">
-              <SocialIcon href="#" icon="T" /> 
-              <SocialIcon href="#" icon="I" />
-              <SocialIcon href="#" icon="F" />
-              <SocialIcon href="#" icon="X" />
+              <SocialIcon href="#"><i className="fab fa-tiktok"></i></SocialIcon> 
+              <SocialIcon href="#"><i className="fab fa-instagram"></i></SocialIcon>
+              <SocialIcon href="#"><i className="fab fa-facebook-f"></i></SocialIcon>
+              <SocialIcon href="#"><i className="fab fa-twitter"></i></SocialIcon>
             </div>
           </div>
 

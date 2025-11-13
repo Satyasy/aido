@@ -93,9 +93,9 @@ export const ChatbotWidget = () => {
          setMessages((prev) => [...prev, botMessage]);
       } catch (error: any) {
          console.error('Error sending message:', error);
-         
+
          let errorMessage = 'Maaf, terjadi kesalahan. Silakan coba lagi.';
-         
+
          if (error.message.includes('Authentication required') || error.message.includes('Session expired')) {
             errorMessage = 'Sesi Anda telah berakhir. Silakan login kembali.';
          }

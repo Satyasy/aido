@@ -79,7 +79,7 @@ const FeaturesPage = () => {
             console.error('Error getting AI response:', error);
 
             let errorText = 'Maaf, terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi.';
-            
+
             if (error.message.includes('Authentication required') || error.message.includes('Session expired')) {
                errorText = 'Sesi Anda telah berakhir. Silakan login kembali untuk melanjutkan konsultasi.';
             }
@@ -322,8 +322,8 @@ const FeaturesPage = () => {
                      {messages.map((message, index) => (
                         <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                            <div className={`${message.type === 'user'
-                                 ? 'bg-blue-200 rounded-3xl rounded-tr-sm'
-                                 : 'bg-purple-200 rounded-3xl rounded-tl-sm'
+                              ? 'bg-blue-200 rounded-3xl rounded-tr-sm'
+                              : 'bg-purple-200 rounded-3xl rounded-tl-sm'
                               } px-6 py-4 max-w-2xl`}>
                               {message.type === 'bot' ? (
                                  <div className="text-gray-800 prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-800 prose-strong:text-gray-900 prose-strong:font-bold prose-em:text-purple-600 prose-ul:text-gray-800 prose-ol:text-gray-800 prose-li:text-gray-800 prose-li:marker:text-purple-400">

@@ -41,8 +41,11 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-export function withAuth(handler: any, roles: string[] = []) {
-  return async (req: NextRequest, res: NextResponse) => {
+export function withAuth(
+  handler: (req: NextRequest, context?: any) => Promise<NextResponse>,
+  roles: string[] = []
+) {
+  return async (req: NextRequest, context?: any) => {
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -66,8 +69,8 @@ export function withAuth(handler: any, roles: string[] = []) {
 
     (req as any).user = decoded;
 
-    return handler(req, res);
-  }
+    return handler(req, context);
+  };
 }
 
 export const config = {

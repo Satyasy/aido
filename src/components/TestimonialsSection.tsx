@@ -6,23 +6,23 @@ export const TestimonialsSection = () => {
    const testimonials = [
       {
          id: 1,
-         username: 'User2345',
+         username: 'Dr. Sarah M.',
          rating: 5,
-         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ullamco laboris aliquip.',
+         text: 'AIDOC sangat membantu dalam memberikan konsultasi awal kepada pasien. Interface yang user-friendly dan response AI yang akurat membuat saya merekomendasikan platform ini.',
          avatar: ''
       },
       {
          id: 2,
-         username: 'User2345',
+         username: 'Ahmad Rahman',
          rating: 5,
-         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ullamco laboris aliquip.',
+         text: 'Sebagai orang yang sering khawatir dengan kesehatan, AIDOC memberikan ketenangan pikiran. Saran-saran yang diberikan selalu relevan dan mudah dipahami.',
          avatar: ''
       },
       {
          id: 3,
-         username: 'User2345',
-         rating: 5,
-         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ullamco laboris aliquip.',
+         username: 'Siti Nurhaliza',
+         rating: 4,
+         text: 'Aplikasi yang sangat membantu untuk konsultasi kesehatan cepat. Fitur analisis gejalanya sangat detail dan rekomendasi obatnya tepat sasaran. Highly recommended!',
          avatar: ''
       }
    ];
@@ -31,7 +31,7 @@ export const TestimonialsSection = () => {
       <section className="py-16 px-4">
          <div className="container mx-auto">
             <h2 className="text-4xl font-bold text-center mb-12">
-               Ulasan Nyata dari Pengguna MediBot
+               Ulasan Nyata dari Pengguna AIDOC
             </h2>
 
             <div className="grid md:grid-cols-3 gap-8">

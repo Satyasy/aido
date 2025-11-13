@@ -61,16 +61,32 @@ export interface MedicineInfoResponse {
  */
 export async function analyzeSymptoms(
   consultationId: number,
-  token: string
+  token?: string
 ): Promise<SymptomAnalysisResponse> {
+  const { refreshTokenIfNeeded } = await import('./authService');
+  const authToken = token || await refreshTokenIfNeeded();
+  
+  if (!authToken) {
+    throw new Error('Authentication required. Please login again.');
+  }
+
   const response = await fetch('/api/v1/gemini/analyze', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ consultationId }),
   });
+
+  if (response.status === 401) {
+    const { logout } = await import('./authService');
+    logout();
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+    throw new Error('Session expired. Please login again.');
+  }
 
   if (!response.ok) {
     const error = await response.json();
@@ -81,24 +97,42 @@ export async function analyzeSymptoms(
 }
 
 /**
- * Chat with MediBot AI
+ * Chat with AIDOC AI
  */
-export async function chatWithMediBot(
+export async function chatWithAidoc(
   data: ChatRequest,
-  token: string
+  token?: string
 ): Promise<ChatResponse> {
+  // If no token provided, try to get and refresh token
+  const { refreshTokenIfNeeded } = await import('./authService');
+  const authToken = token || await refreshTokenIfNeeded();
+  
+  if (!authToken) {
+    throw new Error('Authentication required. Please login again.');
+  }
+
   const response = await fetch('/api/v1/gemini/chat', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   });
 
+  if (response.status === 401) {
+    // Token expired, redirect to login
+    const { logout } = await import('./authService');
+    logout();
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+    throw new Error('Session expired. Please login again.');
+  }
+
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.error || 'Failed to chat with MediBot');
+    throw new Error(error.error || 'Failed to chat with AIDOC');
   }
 
   return response.json();
@@ -109,16 +143,32 @@ export async function chatWithMediBot(
  */
 export async function getMedicineInfo(
   medicineName: string,
-  token: string
+  token?: string
 ): Promise<MedicineInfoResponse> {
+  const { refreshTokenIfNeeded } = await import('./authService');
+  const authToken = token || await refreshTokenIfNeeded();
+  
+  if (!authToken) {
+    throw new Error('Authentication required. Please login again.');
+  }
+
   const response = await fetch('/api/v1/gemini/medicine/info', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ medicineName }),
   });
+
+  if (response.status === 401) {
+    const { logout } = await import('./authService');
+    logout();
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+    throw new Error('Session expired. Please login again.');
+  }
 
   if (!response.ok) {
     const error = await response.json();

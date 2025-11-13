@@ -3,11 +3,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-/**
- * Get Gemini model instance
- * Using gemini-pro as it's the most compatible model
- * Note: If this doesn't work, check your API key permissions at https://makersuite.google.com/app/apikey
- */
 export function getGeminiModel(modelName: string = "gemini-2.5-flash") {
   return genAI.getGenerativeModel({ 
     model: modelName,
@@ -103,7 +98,7 @@ export async function chatWithGemini(
 
       const userGreeting = userName ? `Halo ${userName}! ` : '';
       
-      let prompt = `Anda adalah MediBot, asisten kesehatan AI yang ramah dan informatif. ${userGreeting}Jawab pertanyaan kesehatan berikut dengan bahasa Indonesia yang mudah dipahami.
+      let prompt = `Anda adalah AIDOC, asisten kesehatan AI yang ramah dan informatif. ${userGreeting}Jawab pertanyaan kesehatan berikut dengan bahasa Indonesia yang mudah dipahami.
 
 PENTING: Format jawaban Anda menggunakan Markdown:
 - Gunakan **teks tebal** untuk kata-kata penting atau istilah medis

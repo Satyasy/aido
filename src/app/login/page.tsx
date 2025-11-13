@@ -3,31 +3,21 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
    const router = useRouter();
+   const [showPassword, setShowPassword] = useState(false);
    const [formData, setFormData] = useState({
-      name: '',
+      username: '',
       password: '',
+      rememberMe: false
    });
    const [error, setError] = useState('');
    const [isLoading, setIsLoading] = useState(false);
 
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({
-         ...formData,
-         [e.target.name]: e.target.value,
-      });
-      setError('');
-   };
-
-   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
+   const handleSubmit = async (e?: React.FormEvent) => {
+      if (e) e.preventDefault();
       setIsLoading(true);
       setError('');
 
@@ -37,7 +27,10 @@ export default function LoginPage() {
             headers: {
                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+               name: formData.username,
+               password: formData.password
+            }),
          });
 
          const data = await response.json();
@@ -64,78 +57,151 @@ export default function LoginPage() {
    };
 
    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
-         <Card className="w-full max-w-md shadow-2xl">
-            <CardHeader className="space-y-1">
-               <div className="flex justify-center mb-4">
-                  <div className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                     AIDOC
-                  </div>
-               </div>
-               <CardTitle className="text-2xl font-bold text-center">Welcome Back!</CardTitle>
-               <CardDescription className="text-center">
-                  Sign in to your account to continue
-               </CardDescription>
-            </CardHeader>
-            <CardContent>
-               <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="min-h-screen flex" style={{ background: 'linear-gradient(135deg, #fce4ec 0%, #e1f5fe 100%)' }}>
+         {/* Left Side - Mascot */}
+         <div className="hidden lg:flex lg:w-1/2 items-center justify-center p-12">
+            <div className="relative">
+               <div className="absolute inset-0 bg-purple-300 rounded-full opacity-40 blur-3xl" style={{ width: '500px', height: '500px' }}></div>
+               <div className="absolute inset-0 bg-blue-300 rounded-full opacity-40 blur-3xl" style={{ width: '450px', height: '450px', top: '50px', left: '50px' }}></div>
+               <img
+                  src="/img/maskot.png"
+                  alt="AIDOC Mascot"
+                  className="relative z-10 w-96 h-96 object-contain drop-shadow-2xl"
+               />
+            </div>
+         </div>
+
+         {/* Right Side - Login Form */}
+         <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <div className="bg-white rounded-3xl shadow-2xl p-12 w-full max-w-md">
+               <h1 className="text-4xl font-bold text-gray-800 mb-2">Login</h1>
+               <p className="text-gray-500 mb-8">Login to access your AIDOC account</p>
+
+               <div>
                   {error && (
-                     <Alert variant="destructive">
-                        <AlertDescription>{error}</AlertDescription>
-                     </Alert>
+                     <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
+                        {error}
+                     </div>
                   )}
 
-                  <div className="space-y-2">
-                     <Label htmlFor="name">Username</Label>
-                     <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="Enter your username"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
+                  <form onSubmit={handleSubmit}>
+                     {/* Username Field */}
+                     <div className="mb-6">
+                        <label className="block text-gray-700 text-sm font-medium mb-2">Username</label>
+                        <input
+                           type="text"
+                           value={formData.username}
+                           onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                           placeholder="johndoe"
+                           required
+                           disabled={isLoading}
+                        />
+                     </div>
+
+                     {/* Password Field */}
+                     <div className="mb-6">
+                        <label className="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                        <div className="relative">
+                           <input
+                              type={showPassword ? "text" : "password"}
+                              value={formData.password}
+                              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                              placeholder="••••••••••••••••••••"
+                              required
+                              disabled={isLoading}
+                           />
+                           <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                           >
+                              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                           </button>
+                        </div>
+                     </div>
+
+                     {/* Remember Me & Forgot Password */}
+                     <div className="flex items-center justify-between mb-8">
+                        <label className="flex items-center cursor-pointer">
+                           <input
+                              type="checkbox"
+                              checked={formData.rememberMe}
+                              onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
+                              className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-400"
+                           />
+                           <span className="ml-2 text-sm text-gray-700">Remember me</span>
+                        </label>
+                        <button type="button" className="text-sm text-pink-400 hover:text-pink-500 font-medium">
+                           Forgot Password
+                        </button>
+                     </div>
+
+                     {/* Login Button */}
+                     <button
+                        type="submit"
                         disabled={isLoading}
-                     />
+                        className="w-full bg-blue-400 hover:bg-blue-500 text-white font-medium py-3 rounded-lg transition duration-200 mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                     >
+                        {isLoading ? 'Signing in...' : 'Login'}
+                     </button>
+                  </form>
+
+                  {/* Sign Up Link */}
+                  <p className="text-center text-gray-600 text-sm mb-8">
+                     Don't have an account?{' '}
+                     <Link
+                        href="/register"
+                        className="text-pink-400 hover:text-pink-500 font-medium"
+                     >
+                        Sign up
+                     </Link>
+                  </p>
+
+                  {/* Divider */}
+                  <div className="relative mb-8">
+                     <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300"></div>
+                     </div>
+                     <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-white text-gray-500">Or login with</span>
+                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                     <Label htmlFor="password">Password</Label>
-                     <Input
-                        id="password"
-                        name="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                        disabled={isLoading}
-                     />
+                  {/* Social Login Buttons */}
+                  <div className="grid grid-cols-3 gap-4">
+                     <button
+                        type="button"
+                        className="flex items-center justify-center py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                     >
+                        <svg className="w-6 h-6" viewBox="0 0 24 24">
+                           <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                     </button>
+                     <button
+                        type="button"
+                        className="flex items-center justify-center py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                     >
+                        <svg className="w-6 h-6" viewBox="0 0 24 24">
+                           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                     </button>
+                     <button
+                        type="button"
+                        className="flex items-center justify-center py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                     >
+                        <svg className="w-6 h-6" viewBox="0 0 24 24">
+                           <path fill="#000000" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+                        </svg>
+                     </button>
                   </div>
-
-                  <Button
-                     type="submit"
-                     className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-                     disabled={isLoading}
-                  >
-                     {isLoading ? 'Signing in...' : 'Sign In'}
-                  </Button>
-               </form>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-4">
-               <div className="text-sm text-center text-gray-600">
-                  Don't have an account?{' '}
-                  <Link href="/register" className="text-blue-500 hover:text-blue-600 font-semibold">
-                     Sign up
-                  </Link>
                </div>
-               <div className="text-sm text-center">
-                  <Link href="/" className="text-gray-500 hover:text-gray-700">
-                     ← Back to Home
-                  </Link>
-               </div>
-            </CardFooter>
-         </Card>
+            </div>
+         </div>
       </div>
    );
 }

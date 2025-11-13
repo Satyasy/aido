@@ -121,3 +121,35 @@ export function isAdmin(): boolean {
   const user = getCurrentUser();
   return user?.role === 'admin';
 }
+
+/**
+ * Check if token is expired
+ */
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Date.now() / 1000;
+    return payload.exp < currentTime;
+  } catch (error) {
+    return true;
+  }
+};
+
+/**
+ * Refresh token if needed, otherwise logout and redirect
+ */
+export const refreshTokenIfNeeded = async (): Promise<string | null> => {
+  const token = getToken();
+  if (!token) return null;
+  
+  if (isTokenExpired(token)) {
+    // Token expired, redirect to login
+    logout();
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+    return null;
+  }
+  
+  return token;
+};

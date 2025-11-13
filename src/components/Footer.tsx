@@ -7,7 +7,7 @@ export const Footer = () => {
          <div className="container mx-auto">
             <div className="grid md:grid-cols-4 gap-8 mb-8">
                <div>
-                  <h3 className="text-xl font-bold mb-4">Medibot</h3>
+                  <h3 className="text-xl font-bold mb-4">AIDOC</h3>
                   <ul className="space-y-2 text-sm">
                      <li><Link href="#" className="hover:underline">Tentang Kami</Link></li>
                      <li><Link href="#" className="hover:underline">Cara Kerja</Link></li>
@@ -40,7 +40,7 @@ export const Footer = () => {
                   <h3 className="text-xl font-bold mb-4">Kontak</h3>
                   <ul className="space-y-2 text-sm mb-4">
                      <li>📞 +6283 4561 8530</li>
-                     <li>📧 medibot@mail.com</li>
+                     <li>📧 aidoc@mail.com</li>
                   </ul>
 
                   <div className="flex gap-3">
@@ -61,7 +61,7 @@ export const Footer = () => {
             </div>
 
             <div className="border-t border-white/20 pt-6 text-center text-sm">
-               <p>© 2025 Medibot - All rights reserved</p>
+               <p>© 2025 AIDOC - All rights reserved</p>
             </div>
          </div>
       </footer>

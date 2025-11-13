@@ -11,7 +11,7 @@ export const HealthInfoSection = () => {
                   <Card className="bg-blue-100 p-8 rounded-3xl">
                      <div className="space-y-4">
                         <div className="bg-white p-4 rounded-2xl">
-                           <p className="text-sm font-semibold text-gray-700">Medibot</p>
+                           <p className="text-sm font-semibold text-gray-700">AIDOC</p>
                            <div className="mt-2 space-y-2">
                               <div className="bg-gray-100 h-3 rounded-full w-3/4"></div>
                               <div className="bg-gray-100 h-3 rounded-full w-1/2"></div>
@@ -33,7 +33,7 @@ export const HealthInfoSection = () => {
                         Untuk <span className="text-purple-600">Hidup Sehat</span>
                      </h3>
                      <p className="text-gray-700 mb-6">
-                        Dengan MediBot, kami untuk mendukung kesehatn dimana saja di Indonesia
+                        Dengan AIDOC, kami untuk mendukung kesehatan dimana saja di Indonesia
                      </p>
                      <Button className="bg-white text-purple-600 hover:bg-purple-50 rounded-full px-8">
                         Article

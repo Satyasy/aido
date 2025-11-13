@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -23,11 +23,11 @@ interface User {
 
 export const Navbar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
 
@@ -59,44 +59,59 @@ export const Navbar = () => {
       .substring(0, 2);
   };
 
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="text-2xl font-bold">
-            <Link href="/" className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent hover:from-blue-600 hover:to-purple-600 transition">
-              AIDOC
-            </Link>
-          </div>
+  const getNavLinkClass = (path: string) => {
+    const isActive = pathname === path;
+    const baseClass = "text-2xl font-medium transition-all duration-300";
 
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/#home" className="text-gray-600 hover:text-purple-500 transition">
+    if (isActive) {
+      return `${baseClass} font-semibold bg-gradient-to-r from-[#DDB4F6] to-[#8DD0FC] bg-clip-text text-transparent`;
+    }
+
+    return `${baseClass} text-black hover:bg-gradient-to-r hover:from-[#DDB4F6] hover:to-[#8DD0FC] hover:bg-clip-text hover:text-transparent hover:font-semibold`;
+  };
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md h-20">
+      <div className="container mx-auto px-6 md:px-8 h-full">
+        <div className="flex items-center justify-between h-full">
+          <Link href="/" className="text-2xl md:text-3xl font-bold text-black">
+            AIDOC
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8 lg:gap-12">
+            <Link
+              href="/"
+              className={getNavLinkClass('/')}
+            >
               Home
             </Link>
-            <Link href="/#features" className="text-gray-600 hover:text-purple-500 transition">
+            <Link
+              href="/features"
+              className={getNavLinkClass('/features')}
+            >
               Features
             </Link>
-            <Link href="/#article" className="text-gray-600 hover:text-purple-500 transition">
-              Article
-            </Link>
-            <Link href="/#consultation" className="text-gray-600 hover:text-purple-500 transition">
+            <Link
+              href="/consultation"
+              className={getNavLinkClass('/consultation')}
+            >
               Consultation
             </Link>
           </div>
 
           <div>
             {isLoading ? (
-              <div className="w-28 h-10 bg-gray-200 animate-pulse rounded-md"></div>
+              <div className="w-56 h-[70px] bg-gray-200 animate-pulse rounded-[20px]"></div>
             ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-gradient-to-r from-[#F4AFE9] to-[#8DD0FC] text-white">
                         {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="hidden md:inline">{user.name}</span>
+                    <span className="hidden md:inline text-xl">{user.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
@@ -111,54 +126,24 @@ export const Navbar = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push('/dashboard')}>
-                    <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
                     Dashboard
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/profile')}>
-                    <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    Profile
-                  </DropdownMenuItem>
-                  {user.role === 'admin' && (
-                    <DropdownMenuItem onClick={() => router.push('/admin')}>
-                      <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      Admin Panel
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                    <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  onClick={() => router.push('/login')}
-                  className="text-gray-600 hover:text-purple-500"
-                >
-                  Sign in
-                </Button>
-                <Button
-                  onClick={() => router.push('/register')}
-                  className="bg-gradient-to-r from-[#DDB4F6] to-[#8DD0FC] hover:from-pink-500 hover:to-blue-500"
-                >
-                  Sign up
-                </Button>
-              </div>
+              <button
+                onClick={() => router.push('/login')}
+                className="w-56 h-[70px] rounded-[20px] bg-gradient-to-r from-[#F4AFE9] to-[#8DD0FC] shadow-[0_4px_10px_0_#FFD3F8] flex items-center justify-center text-2xl font-normal text-black hover:opacity-90 transition"
+              >
+                Sign In
+              </button>
             )}
           </div>
         </div>
+        <div className="absolute bottom-0 left-0 right-0 w-full h-[1px] bg-gradient-to-r from-[#DDB4F6] to-[#8DD0FC]"></div>
       </div>
     </nav>
   );

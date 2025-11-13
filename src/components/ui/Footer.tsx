@@ -15,10 +15,10 @@ const helpItems = [
 ];
 
 const SocialIcon = ({ href, icon }: { href: string, icon: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" 
-       className="w-8 h-8 flex items-center justify-center bg-white/30 rounded-full hover:bg-white/50 transition">
-        {icon}
-    </a>
+  <a href={href} target="_blank" rel="noopener noreferrer"
+    className="w-8 h-8 flex items-center justify-center bg-white/30 rounded-full hover:bg-white/50 transition">
+    {icon}
+  </a>
 );
 
 
@@ -26,14 +26,14 @@ export function Footer() {
   return (
     <footer className="bg-gradient-to-r from-blue-200 to-purple-300 text-white pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4">
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-x-8 lg:gap-x-16 border-b border-white/20 pb-10">
-          
+
           <div>
-            <h3 className="text-2xl font-bold mb-3">MediBot</h3>
+            <h3 className="text-2xl font-bold mb-3">AIDOC</h3>
             <p className="text-sm space-y-1">
-              <span>Teman cerdas untuk</span><br/>
-              <span>Dapatkan informasi</span><br/>
+              <span>Teman cerdas untuk</span><br />
+              <span>Dapatkan informasi</span><br />
               <span>Konsultasi terpercaya</span>
             </p>
           </div>
@@ -67,9 +67,9 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Kontak</h4>
             <p className="text-sm mb-4">+3822 4567 8910</p>
-            
+
             <div className="flex space-x-3">
-              <SocialIcon href="#" icon="T" /> 
+              <SocialIcon href="#" icon="T" />
               <SocialIcon href="#" icon="I" />
               <SocialIcon href="#" icon="F" />
               <SocialIcon href="#" icon="X" />

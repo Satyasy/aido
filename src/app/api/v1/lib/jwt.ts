@@ -8,7 +8,7 @@ if (!SECRET) {
 }
 export function signJwt(
     payload: object,
-    expiresIn: SignOptions['expiresIn'] = "1d" as SignOptions['expiresIn']
+    expiresIn: SignOptions['expiresIn'] = "7d" as SignOptions['expiresIn']
 ): string {
     const options: SignOptions = { expiresIn };
     return jwt.sign(payload, SECRET, options);
@@ -17,7 +17,11 @@ export function verifyJwt(token: string): JwtPayload | null {
     try {
         return jwt.verify(token, SECRET) as JwtPayload;
     } catch (error) {
-        console.error('JWT verification failed:', error);
+        if (error instanceof jwt.TokenExpiredError) {
+            console.error('JWT Token expired at:', error.expiredAt);
+        } else {
+            console.error('JWT verification failed:', error);
+        }
         return null;
     }
 }

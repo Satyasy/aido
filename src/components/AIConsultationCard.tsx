@@ -31,7 +31,7 @@ export const AIConsultationCard = () => {
                            </svg>
                         </div>
                         <div>
-                           <h3 className="font-bold text-gray-900 mb-2">MediBot Insight</h3>
+                           <h3 className="font-bold text-gray-900 mb-2">AIDOC Insight</h3>
                            <p className="text-sm text-gray-700">
                               Mendapat wawasan mendalam berdasarkan keluhan Anda dan saran yang sesuai.
                            </p>

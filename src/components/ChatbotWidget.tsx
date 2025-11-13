@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { chatWithMediBot } from '@/lib/geminiService';
+import { chatWithAidoc } from '@/lib/geminiService';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -16,16 +16,25 @@ interface Message {
 
 export const ChatbotWidget = () => {
    const [isOpen, setIsOpen] = useState(false);
-   const [messages, setMessages] = useState<Message[]>([
-      {
-         role: 'assistant',
-         content: 'Halo! Saya MediBot, asisten kesehatan AI Anda. Ada yang bisa saya bantu?',
-         timestamp: new Date(),
-      },
-   ]);
+   const [messages, setMessages] = useState<Message[]>([]);
    const [inputMessage, setInputMessage] = useState('');
    const [isLoading, setIsLoading] = useState(false);
+   const [initialized, setInitialized] = useState(false);
    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+   // Initialize default message on client side
+   useEffect(() => {
+      if (!initialized) {
+         setMessages([
+            {
+               role: 'assistant',
+               content: 'Halo! Saya AIDOC, asisten kesehatan AI Anda. Ada yang bisa saya bantu?',
+               timestamp: new Date(),
+            },
+         ]);
+         setInitialized(true);
+      }
+   }, [initialized]);
 
    const scrollToBottom = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -69,13 +78,11 @@ export const ChatbotWidget = () => {
             content: msg.content,
          }));
 
-         const response = await chatWithMediBot(
-            {
-               message: inputMessage,
-               conversationHistory,
-            },
-            token
-         );
+         // Don't pass token, let chatWithAidoc handle token refresh
+         const response = await chatWithAidoc({
+            message: inputMessage,
+            conversationHistory,
+         });
 
          const botMessage: Message = {
             role: 'assistant',
@@ -84,14 +91,21 @@ export const ChatbotWidget = () => {
          };
 
          setMessages((prev) => [...prev, botMessage]);
-      } catch (error) {
+      } catch (error: any) {
          console.error('Error sending message:', error);
-         const errorMessage: Message = {
+         
+         let errorMessage = 'Maaf, terjadi kesalahan. Silakan coba lagi.';
+         
+         if (error.message.includes('Authentication required') || error.message.includes('Session expired')) {
+            errorMessage = 'Sesi Anda telah berakhir. Silakan login kembali.';
+         }
+
+         const errorMsg: Message = {
             role: 'assistant',
-            content: 'Maaf, terjadi kesalahan. Silakan coba lagi.',
+            content: errorMessage,
             timestamp: new Date(),
          };
-         setMessages((prev) => [...prev, errorMessage]);
+         setMessages((prev) => [...prev, errorMsg]);
       } finally {
          setIsLoading(false);
       }
@@ -138,7 +152,7 @@ export const ChatbotWidget = () => {
                         <span className="text-2xl">🤖</span>
                      </div>
                      <div>
-                        <h3 className="font-bold">MediBot</h3>
+                        <h3 className="font-bold">AIDOC</h3>
                         <p className="text-xs opacity-90">Asisten Kesehatan AI</p>
                      </div>
                   </div>

@@ -57,7 +57,7 @@ export default function DashboardPage() {
          <main className="pt-24 pb-12 px-4">
             <div className="container mx-auto max-w-7xl">
                {/* Welcome Section */}
-               <div className="mb-8">
+               <div className="mb-8 p-10 bg-white rounded-lg shadow">
                   <h1 className="text-4xl font-bold text-gray-900 mb-2">
                      Welcome back, {user.name}! 👋
                   </h1>
@@ -114,7 +114,7 @@ export default function DashboardPage() {
                      </CardHeader>
                      <CardContent>
                         <div className="text-2xl font-bold">0</div>
-                        <p className="text-xs text-gray-500">Start chatting with MediBot</p>
+                        <p className="text-xs text-gray-500">Start chatting with AIDOC</p>
                      </CardContent>
                   </Card>
 
@@ -162,7 +162,7 @@ export default function DashboardPage() {
 
                   <Card>
                      <CardHeader>
-                        <CardTitle>Chat with MediBot</CardTitle>
+                        <CardTitle>Chat with AIDOC</CardTitle>
                         <CardDescription>
                            Ask health questions and get instant answers
                         </CardDescription>
